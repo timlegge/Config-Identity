@@ -1,0 +1,46 @@
+NAME
+    Config::Identity - Load (and optionally decrypt via GnuPG) user/pass
+    identity information
+
+VERSION
+    version 0.0010
+
+SYNOPSIS
+        # 1. Find either $HOME/.pause-identity or $HOME/.pause
+        # 2. Decrypt the found file (if necessary), read, and parse it
+        # 3. Check to make sure %identity has 'user' and 'password'
+
+        use Config::Identity::PAUSE;
+        my %identity = Config::Identity::PAUSE->load;
+        print "user: $identity{user} password: $identity{password}\n";
+     
+        # 1. Find either $HOME/.github-identity or $HOME/.github
+        # 2. Decrypt the found file (if necessary) read, and parse it
+        # 3. Check to make sure %identity has 'login' and 'token'
+
+        use Config::Identity::GitHub;
+        my %identity = Config::Identity::PAUSE->load;
+        print "login: $identity{login} token: $identity{token}\n";
+
+DESCRIPTION
+    Config::Identity is a tool for loadiing (and optionally decrypting via
+    GnuPG) user/pass identity information
+
+    For GitHub API access, an identity is a "login"/"token" pair
+
+    For PAUSE access, an identity is a "user"/"pass" pair
+
+    See the SYNOPSIS for usage
+
+USAGE
+    See the SYNOPSIS
+
+AUTHOR
+      Robert Krimen <robertkrimen@gmail.com>
+
+COPYRIGHT AND LICENSE
+    This software is copyright (c) 2010 by Robert Krimen.
+
+    This is free software; you can redistribute it and/or modify it under
+    the same terms as the Perl 5 programming language system itself.
+
