@@ -29,15 +29,19 @@ _END_
 
 cmp_deeply( \%cfg, {qw/ apple a1 banana b2 /} );
 
-$ENV{CONFIG_IDENTITY_GPG} = 'gpg --no-permission-warning --homedir ' . File::Spec->catfile(qw/ t assets gpg /);
+SKIP: {
+    skip 'GnuPG not available' unless Config::Identity->GPG;
 
-is( Config::Identity->read( File::Spec->catfile(qw/ t assets test.asc /) ), <<_END_ );
+    $ENV{CI_GPG_ARGUMENTS} =
+        '--no-permission-warning --homedir ' . File::Spec->catfile(qw/ t assets gpg /);
+
+    is( Config::Identity->read( File::Spec->catfile(qw/ t assets test.asc /) ), <<_END_ );
 1234567890xyzzy
 
 # 123
 _END_
 
-is( Config::Identity->read( File::Spec->catfile(qw/ t assets test.gpg /) ), <<_END_ );
+    is( Config::Identity->read( File::Spec->catfile(qw/ t assets test.gpg /) ), <<_END_ );
 ABCDEFGHIJKLMNOPQRSTUVWXYZ
 
 1 2 3 4 5 6 7 8 9 0
@@ -45,19 +49,19 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZ
 .
 _END_
 
-use Config::Identity::GitHub;
-{
-    local $Config::Identity::home = File::Spec->catfile(qw/ t assets github /);
-    my %identity = Config::Identity::GitHub->load_check;
-    cmp_deeply( \%identity, {qw/ login alice token hunter2 /} );
-}
+    use Config::Identity::GitHub;
+    {
+        local $Config::Identity::home = File::Spec->catfile(qw/ t assets github /);
+        my %identity = Config::Identity::GitHub->load_check;
+        cmp_deeply( \%identity, {qw/ login alice token hunter2 /} );
+    }
 
-use Config::Identity::PAUSE;
-{
-    local $Config::Identity::home = File::Spec->catfile(qw/ t assets pause /);
-    my %identity = Config::Identity::PAUSE->load_check;
-    cmp_deeply( \%identity, {qw/ user alice password hunter2 /} );
+    use Config::Identity::PAUSE;
+    {
+        local $Config::Identity::home = File::Spec->catfile(qw/ t assets pause /);
+        my %identity = Config::Identity::PAUSE->load_check;
+        cmp_deeply( \%identity, {qw/ user alice password hunter2 /} );
+    }
 }
-
 
 1;

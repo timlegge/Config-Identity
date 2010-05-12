@@ -45,7 +45,15 @@ use File::HomeDir();
 use File::Spec;
 
 our $home = File::HomeDir->home;
-sub GPG() { $ENV{CONFIG_IDENTITY_GPG} || 'gpg' }
+{
+    my $gpg;
+    sub GPG() { $ENV{CI_GPG} || ( $gpg ||= do {
+        require File::Which;
+        $gpg = File::Which::which( $_ ) and last for qw/ gpg gpg2 /;
+        $gpg;
+    } ) }
+}
+sub GPG_ARGUMENTS() { $ENV{CI_GPG_ARGUMENTS} || '' }
 
 # TODO Do not even need to do this, since the file is on disk already...
 sub decrypt {
@@ -53,9 +61,12 @@ sub decrypt {
     my $input = shift;
 
     my ( $in, $out, $error ) = ( gensym, gensym, gensym );
-    my $command = 'gpg -qd --no-tty --command-fd 0 --status-fd 1';
-    $command = GPG . ' -qd --no-tty --command-fd 0';
-    my $process = open3( $in, $out, $error, "$command" );
+    my $gpg = GPG or croak "Missing gpg";
+    my $gpg_arguments = GPG_ARGUMENTS;
+    my $run;
+    $run = "$gpg $gpg_arguments -qd --no-tty --command-fd 0 --status-fd 1";
+    $run = "$gpg $gpg_arguments -qd --no-tty --command-fd 0";
+    my $process = open3( $in, $out, $error, $run );
     print $in $input;
     close $in;
     my $output = join '', <$out>;

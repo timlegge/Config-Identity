@@ -9,6 +9,7 @@ use Dzpl
     require => q/
         File::HomeDir
         File::Spec
+        File::Which
         IPC::Open3
 
         [Test]
