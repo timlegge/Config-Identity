@@ -35,7 +35,7 @@ For PAUSE access, an identity is a C<user>/C<password> pair
 
 See the SYNOPSIS for usage
 
-=head1 Encrypt your identity information with GnuPG
+=head1 Encrypting your identity information with GnuPG
 
 If you've never used GnuPG before, first initialize it:
 
@@ -48,12 +48,29 @@ To encrypt your GitHub identity with GnuPG using the above key:
     # Use ^D once you've finished typing out your authentication information
     gpg -ea > $HOME/.github
 
-=head1 Suggested PAUSE identity format
+=head1 Caching your GnuPG secret key via gpg-agent
+
+Put the following in your .*rc
+
+    if which gpg-agent 1>/dev/null
+    then
+        if test -f $HOME/.gpg-agent-info && \
+            kill -0 `cut -d: -f 2 $HOME/.gpg-agent-info` 2>/dev/null
+        then
+            . "${HOME}/.gpg-agent-info"
+            export GPG_AGENT_INFO
+        else
+            eval `gpg-agent --daemon --write-env-file "${HOME}/.gpg-agent-info"`
+        fi
+    else
+    fi
+
+=head1 PAUSE identity format
 
     user <user>
     password <password>
 
-=head1 Suggested GitHub identity format
+=head1 GitHub identity format
 
     login <login>
     token <token>
