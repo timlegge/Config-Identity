@@ -3,7 +3,7 @@ NAME
     identity information
 
 VERSION
-    version 0.0010
+    version 0.0011
 
 SYNOPSIS
         # 1. Find either $HOME/.pause-identity or $HOME/.pause
@@ -31,6 +31,26 @@ DESCRIPTION
     For PAUSE access, an identity is a "user"/"pass" pair
 
     See the SYNOPSIS for usage
+
+Encrypt your identity information with GnuPG
+    If you've never used GnuPG before, first initialize it:
+
+        # Follow the prompts to create a new key for yourself
+        gpg --gen-key
+
+    To encrypt your GitHub identity with GnuPG using the above key:
+
+        # Follow the prompts, using the above key as the "recipient"
+        # Use ^D once you've finished typing out your authentication information
+        gpg -ea > $HOME/.github
+
+Suggested PAUSE identity format
+        user <user>
+        password <password>
+
+Suggested GitHub identity format
+        login <login>
+        token <token>
 
 USAGE
     See the SYNOPSIS
