@@ -3,19 +3,25 @@ package Config::Identity;
 
 =head1 SYNOPSIS
 
-    # 1. Find either $HOME/.pause-identity or $HOME/.pause
-    # 2. Decrypt the found file (if necessary), read, and parse it
-    # 3. Check to make sure %identity has 'user' and 'password'
+PAUSE:
 
     use Config::Identity::PAUSE;
+
+    # 1. Find either $HOME/.pause-identity or $HOME/.pause
+    # 2. Decrypt the found file (if necessary), read, and parse it
+    # 3. Throw an exception unless  %identity has 'user' and 'password' defined
+
     my %identity = Config::Identity::PAUSE->load;
     print "user: $identity{user} password: $identity{password}\n";
      
-    # 1. Find either $HOME/.github-identity or $HOME/.github
-    # 2. Decrypt the found file (if necessary) read, and parse it
-    # 3. Check to make sure %identity has 'login' and 'token'
+GitHub API:
 
     use Config::Identity::GitHub;
+
+    # 1. Find either $HOME/.github-identity or $HOME/.github
+    # 2. Decrypt the found file (if necessary) read, and parse it
+    # 3. Throw an exception unless %identity has 'login' and 'token' defined
+
     my %identity = Config::Identity::PAUSE->load;
     print "login: $identity{login} token: $identity{token}\n";
 
@@ -25,7 +31,7 @@ Config::Identity is a tool for loadiing (and optionally decrypting via GnuPG) us
 
 For GitHub API access, an identity is a C<login>/C<token> pair
 
-For PAUSE access, an identity is a C<user>/C<pass> pair
+For PAUSE access, an identity is a C<user>/C<password> pair
 
 See the SYNOPSIS for usage
 

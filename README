@@ -6,19 +6,25 @@ VERSION
     version 0.0011
 
 SYNOPSIS
-        # 1. Find either $HOME/.pause-identity or $HOME/.pause
-        # 2. Decrypt the found file (if necessary), read, and parse it
-        # 3. Check to make sure %identity has 'user' and 'password'
+    PAUSE:
 
         use Config::Identity::PAUSE;
+
+        # 1. Find either $HOME/.pause-identity or $HOME/.pause
+        # 2. Decrypt the found file (if necessary), read, and parse it
+        # 3. Throw an exception unless  %identity has 'user' and 'password' defined
+
         my %identity = Config::Identity::PAUSE->load;
         print "user: $identity{user} password: $identity{password}\n";
-     
-        # 1. Find either $HOME/.github-identity or $HOME/.github
-        # 2. Decrypt the found file (if necessary) read, and parse it
-        # 3. Check to make sure %identity has 'login' and 'token'
+
+    GitHub API:
 
         use Config::Identity::GitHub;
+
+        # 1. Find either $HOME/.github-identity or $HOME/.github
+        # 2. Decrypt the found file (if necessary) read, and parse it
+        # 3. Throw an exception unless %identity has 'login' and 'token' defined
+
         my %identity = Config::Identity::PAUSE->load;
         print "login: $identity{login} token: $identity{token}\n";
 
@@ -28,7 +34,7 @@ DESCRIPTION
 
     For GitHub API access, an identity is a "login"/"token" pair
 
-    For PAUSE access, an identity is a "user"/"pass" pair
+    For PAUSE access, an identity is a "user"/"password" pair
 
     See the SYNOPSIS for usage
 
