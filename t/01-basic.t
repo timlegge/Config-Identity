@@ -33,7 +33,10 @@ SKIP: {
     skip 'GnuPG not available' unless Config::Identity->GPG;
 
     $ENV{CI_GPG_ARGUMENTS} =
-        '--no-permission-warning --homedir ' . File::Spec->catfile(qw/ t assets gpg /);
+        '--no-secmem-warning ' .
+        '--no-permission-warning ' .
+        '--homedir ' . File::Spec->catfile(qw/ t assets gpg /)
+    ;
 
     is( Config::Identity->read( File::Spec->catfile(qw/ t assets test.asc /) ), <<_END_ );
 1234567890xyzzy
