@@ -35,6 +35,16 @@ For PAUSE access, an identity is a C<user>/C<password> pair
 
 See the SYNOPSIS for usage
 
+=head1 Using a custom C<gpg> or passing custom arguments
+
+You can specify a custom C<gpg> executable by setting the CI_GPG environment variable
+
+    export CI_GPG="$HOME/bin/gpg"
+
+You can pass custom arguments by setting the CI_GPG_ARGUMENTS environment variable
+
+    export CI_GPG_ARGUMENTS="--no-secmem-warning"
+
 =head1 Encrypting your identity information with GnuPG
 
 If you've never used GnuPG before, first initialize it:
