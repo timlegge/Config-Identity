@@ -8,7 +8,7 @@ use Carp;
 
 sub load {
     my $self = shift;
-    return Config::Identity->load_best( 'github' );
+    return Config::Identity->try_best( 'github' );
 }
 
 sub check {

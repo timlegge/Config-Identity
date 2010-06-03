@@ -8,7 +8,7 @@ use Carp;
 
 sub load {
     my $self = shift;
-    return Config::Identity->load_best( 'pause' );
+    return Config::Identity->try_best( 'pause' );
 }
 
 sub check {

@@ -33,7 +33,24 @@ For GitHub API access, an identity is a C<login>/C<token> pair
 
 For PAUSE access, an identity is a C<user>/C<password> pair
 
-See the SYNOPSIS for usage
+=head1 USAGE
+
+=head2 %identity = Config::Identity->load_best( <stub> )
+
+First attempt to load an identity from $HOME/.<stub>-identity
+
+If that file does not exist, then attempt to load an identity from $HOME/.<stub>
+
+The file may be optionally GnuPG encrypted
+
+%identity will be populated like so:
+
+    <key> <value>
+
+For example:
+
+    username alice
+    password hunter2
 
 =head1 Using a custom C<gpg> or passing custom arguments
 
@@ -84,10 +101,6 @@ Put the following in your .*rc
 
     login <login>
     token <token>
-
-=head1 USAGE
-
-See the SYNOPSIS
 
 =cut
 
@@ -191,6 +204,14 @@ sub parse {
 }
 
 sub load_best {
+    my $self = shift;
+    my $stub = shift;
+
+    die "Unable to find .$stub-identity or .$stub" unless my $path = $self->best( $stub );
+    return $self->load( $path );
+}
+
+sub try_best {
     my $self = shift;
     my $stub = shift;
 

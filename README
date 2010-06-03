@@ -3,7 +3,7 @@ NAME
     identity information
 
 VERSION
-    version 0.0013
+    version 0.0014
 
 SYNOPSIS
     PAUSE:
@@ -36,7 +36,23 @@ DESCRIPTION
 
     For PAUSE access, an identity is a "user"/"password" pair
 
-    See the SYNOPSIS for usage
+USAGE
+  %identity = Config::Identity->load_best( <stub> )
+    First attempt to load an identity from $HOME/.<stub>-identity
+
+    If that file does not exist, then attempt to load an identity from
+    $HOME/.<stub>
+
+    The file may be optionally GnuPG encrypted
+
+    %identity will be populated like so:
+
+        <key> <value>
+
+    For example:
+
+        username alice
+        password hunter2
 
 Using a custom "gpg" or passing custom arguments
     You can specify a custom "gpg" executable by setting the CI_GPG
@@ -84,9 +100,6 @@ PAUSE identity format
 GitHub identity format
         login <login>
         token <token>
-
-USAGE
-    See the SYNOPSIS
 
 AUTHOR
       Robert Krimen <robertkrimen@gmail.com>

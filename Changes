@@ -1,3 +1,11 @@
+0.0014 Wednesday June 02 20:23:51 PDT 2010:
+    - Changed load_best to try_best and added a stricter load_best
+
+0.0013 2010-06-12:
+    - Surpress secmem warning during testing
+    - Added documentation about CI_{GPG/CI_GPG_ARGUMENTS}
+    - Put in information about using gpg-agent
+    
 0.0012 Tuesday May 11 23:59:01 PDT 2010:
     - Updated documentation
 
