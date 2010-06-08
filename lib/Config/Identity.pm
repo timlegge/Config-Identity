@@ -97,6 +97,8 @@ Put the following in your .*rc
     user <user>
     password <password>
 
+C<username> can also be used as alias for C<user>
+
 =head1 GitHub identity format
 
     login <login>

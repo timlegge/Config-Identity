@@ -8,7 +8,10 @@ use Carp;
 
 sub load {
     my $self = shift;
-    return Config::Identity->try_best( 'pause' );
+    my %identity =  Config::Identity->try_best( 'pause' );
+    $identity{user} = $identity{username} if exists $identity{username} && ! exists $identity{user};
+    $identity{username} = $identity{user} if exists $identity{user} && ! exists $identity{username};
+    return %identity;
 }
 
 sub check {

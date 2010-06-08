@@ -63,7 +63,12 @@ _END_
     {
         local $Config::Identity::home = File::Spec->catfile(qw/ t assets pause /);
         my %identity = Config::Identity::PAUSE->load_check;
-        cmp_deeply( \%identity, {qw/ user alice password hunter2 /} );
+        cmp_deeply( \%identity, {qw/ username alice user alice password hunter2 /} );
+    }
+    {
+        local $Config::Identity::home = File::Spec->catfile(qw/ t assets pause-username /);
+        my %identity = Config::Identity::PAUSE->load_check;
+        cmp_deeply( \%identity, {qw/ username alice user alice password hunter3 /} );
     }
 }
 

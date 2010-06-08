@@ -3,7 +3,7 @@ NAME
     identity information
 
 VERSION
-    version 0.0014
+    version 0.0015
 
 SYNOPSIS
     PAUSE:
@@ -96,6 +96,8 @@ Caching your GnuPG secret key via gpg-agent
 PAUSE identity format
         user <user>
         password <password>
+
+    "username" can also be used as alias for "user"
 
 GitHub identity format
         login <login>
