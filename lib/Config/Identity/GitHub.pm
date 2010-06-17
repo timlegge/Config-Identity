@@ -6,9 +6,12 @@ use warnings;
 use Config::Identity;
 use Carp;
 
+our $STUB = 'github';
+sub STUB { defined $_ and return $_ for $ENV{CI_GITHUB_STUB}, $STUB }
+
 sub load {
     my $self = shift;
-    return Config::Identity->try_best( 'github' );
+    return Config::Identity->try_best( $self->STUB );
 }
 
 sub check {

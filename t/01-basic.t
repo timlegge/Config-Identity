@@ -29,6 +29,13 @@ _END_
 
 cmp_deeply( \%cfg, {qw/ apple a1 banana b2 /} );
 
+{
+    local $ENV{CI_PAUSE_STUB} = 'pause-alternate';
+    local $Config::Identity::home = File::Spec->catfile(qw/ t assets pause /);
+    my %identity = Config::Identity::PAUSE->load_check;
+    cmp_deeply( \%identity, {qw/ username alternate user alternate password xyzzy /} );
+}
+
 SKIP: {
     skip 'GnuPG not available' unless Config::Identity->GPG;
 

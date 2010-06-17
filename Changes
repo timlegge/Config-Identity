@@ -1,3 +1,6 @@
+0.0016 Wednesday June 16 23:26:25 PDT 2010:
+    - Added CI_PAUSE_STUB/CI_GITHUB_STUB override
+
 0.0015 Tuesday June 08 15:57:29 PDT 2010:
     - Added username/user aliasing to the PAUSE format (and loader)
 

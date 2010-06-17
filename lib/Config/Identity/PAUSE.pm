@@ -6,9 +6,12 @@ use warnings;
 use Config::Identity;
 use Carp;
 
+our $STUB = 'pause';
+sub STUB { defined $_ and return $_ for $ENV{CI_PAUSE_STUB}, $STUB }
+
 sub load {
     my $self = shift;
-    my %identity =  Config::Identity->try_best( 'pause' );
+    my %identity =  Config::Identity->try_best( $self->STUB );
     $identity{user} = $identity{username} if exists $identity{username} && ! exists $identity{user};
     $identity{username} = $identity{user} if exists $identity{user} && ! exists $identity{username};
     return %identity;
