@@ -1,3 +1,6 @@
+TODO:
+    - Trying GPG on empty file
+
 0.0016 Wednesday June 16 23:26:25 PDT 2010:
     - Added CI_PAUSE_STUB/CI_GITHUB_STUB override
 
