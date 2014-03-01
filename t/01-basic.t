@@ -51,13 +51,15 @@ SKIP: {
 # 123
 _END_
 
-    is( Config::Identity->read( File::Spec->catfile(qw/ t assets test.gpg /) ), <<_END_ );
+    if ($ENV{RELEASE_TESTING}) {
+        is( Config::Identity->read( File::Spec->catfile(qw/ t assets test.gpg /) ), <<_END_ );
 ABCDEFGHIJKLMNOPQRSTUVWXYZ
 
 1 2 3 4 5 6 7 8 9 0
 
 .
 _END_
+    }
 
     use Config::Identity::GitHub;
     {
