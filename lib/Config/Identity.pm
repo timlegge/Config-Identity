@@ -110,8 +110,7 @@ use strict;
 use warnings;
 
 use Carp;
-use IPC::Open3 qw/ open3 /;
-use Symbol qw/ gensym /;
+use IPC::Run qw/ start finish /;
 use File::HomeDir();
 use File::Spec;
 
@@ -131,17 +130,17 @@ sub decrypt {
     my $self = shift;
     my $input = shift;
 
-    my ( $in, $out, $error ) = ( gensym, gensym, gensym );
     my $gpg = GPG or croak "Missing gpg";
     my $gpg_arguments = GPG_ARGUMENTS;
     my $run;
     $run = "$gpg $gpg_arguments -qd --no-tty --command-fd 0 --status-fd 1";
     $run = "$gpg $gpg_arguments -qd --no-tty --command-fd 0";
-    my $process = open3( $in, $out, $error, $run );
-    print $in $input;
-    close $in;
-    my $output = join '', <$out>;
-    my $_error = join '', <$error>;
+    my $process = start( [ split m/\s+/, $run ], '<pipe', \*IN, '>pipe', \*OUT, '2>pipe', \*ERR );
+    print IN $input;
+    close IN;
+    my $output = join '', <OUT>;
+    my $_error = join '', <ERR>;
+    finish $process;
     return ( $output, $_error );
 }
 
