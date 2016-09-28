@@ -210,7 +210,7 @@ sub load_best {
     my $self = shift;
     my $stub = shift;
 
-    die "Unable to find .$stub-identity or .$stub" unless my $path = $self->best( $stub );
+    croak "Unable to find .$stub-identity or .$stub" unless my $path = $self->best( $stub );
     return $self->load( $path );
 }
 
