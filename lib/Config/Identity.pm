@@ -52,6 +52,18 @@ For example:
     username alice
     password hunter2
 
+If an identity file can't be found or read, the method croaks.
+
+=head2 %identity = Config::Identity->load_check( <stub>, <checker> )
+
+Works like C<load_best> but also checks for required keys.  The C<checker>
+argument must be an array reference of B<required> keys or a code reference
+that takes a hashref of key/value pairs from the identity file and returns
+a list of B<missing> keys.  For convenience, the hashref will also be
+placed in C<$_>.
+
+If any keys are found missing, the method croaks.
+
 =head1 Using a custom C<gpg> or passing custom arguments
 
 You can specify a custom C<gpg> executable by setting the CI_GPG environment variable
@@ -227,6 +239,32 @@ sub load {
     my $file = shift;
 
     return $self->parse( $self->read( $file ) );
+}
+
+sub load_check {
+    my $self = shift;
+    my $stub = shift;
+    my $required = shift || [];
+
+    my %identity = $self->load_best($stub);
+    my @missing;
+    if ( ref $required eq 'ARRAY' ) {
+        @missing = grep { ! defined $identity{$_} } @$required;
+    }
+    elsif ( ref $required eq 'CODE' ) {
+        local $_ = \%identity;
+        @missing = $required->(\%identity);
+    }
+    else {
+        croak "Argument to check keys must be an arrayref or coderef";
+    }
+
+    if ( @missing ) {
+        my $inflect = @missing > 1 ? "fields" : "field";
+        croak "Missing required ${inflect}: @missing"
+    }
+
+    return %identity;
 }
 
 1;

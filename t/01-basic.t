@@ -36,6 +36,37 @@ cmp_deeply( \%cfg, {qw/ apple a1 banana b2 /} );
     cmp_deeply( \%identity, {qw/ username alternate user alternate password xyzzy /} );
 }
 
+{
+    local $Config::Identity::home = File::Spec->catfile(qw/ t assets pause /);
+    my $expected = {qw/ username alternate password xyzzy /};
+    my %got;
+
+    %got = Config::Identity->load_check('pause-alternate',[qw/username password/]);
+    cmp_deeply( \%got, $expected, "load_check with arrayref" );
+
+    my %identity = Config::Identity->load_check('pause-alternate',sub {});
+    cmp_deeply( \%got, $expected, "load_check with coderef" );
+
+    eval { Config::Identity->load_check('pause-alternate', "notfound1") };
+    like( $@, qr/^Argument to check keys must be an arrayref or coderef/, "load_check croaks on bad argument" );
+
+    eval { Config::Identity->load_check('pause-alternate',[qw/notfound1 password/]) };
+    like( $@, qr/^Missing required field: notfound1/, "load_check detected missing field" );
+
+    eval { Config::Identity->load_check('pause-alternate',[qw/notfound1 notfound2 password/]) };
+    like( $@, qr/^Missing required fields: notfound1 notfound2/, "load_check detected missing fields" );
+
+    my $checker = sub {
+        is( "$_", "$_[0]", "checker sub has same \$_ and \$[0]" );
+        cmp_deeply( $_, $expected, "checker sub has expected fields in \$_" );
+        return "notfound1"; # fake error
+    };
+
+    eval { Config::Identity->load_check('pause-alternate', $checker) };
+    like( $@, qr/^Missing required field: notfound1/, "load_check detected missing field (from checker sub)" );
+
+}
+
 SKIP: {
     skip 'GnuPG not available' unless Config::Identity->GPG;
 
