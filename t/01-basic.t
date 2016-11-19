@@ -45,7 +45,7 @@ cmp_deeply( \%cfg, {qw/ apple a1 banana b2 /} );
     cmp_deeply( \%got, $expected, "load_check with arrayref" );
 
     my %identity = Config::Identity->load_check('pause-alternate',sub {});
-    cmp_deeply( \%got, $expected, "load_check with coderef" );
+    cmp_deeply( \%identity, $expected, "load_check with coderef" );
 
     eval { Config::Identity->load_check('pause-alternate', "notfound1") };
     like( $@, qr/^Argument to check keys must be an arrayref or coderef/, "load_check croaks on bad argument" );
