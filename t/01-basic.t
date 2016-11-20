@@ -3,7 +3,8 @@
 use strict;
 use warnings;
 
-use Test::Most;
+use Test::More;
+use Test::Deep;
 plan 'no_plan';
 
 use Config::Identity;

@@ -1,125 +1,10 @@
+use strict;
+use warnings;
+
 package Config::Identity;
 # ABSTRACT: Load (and optionally decrypt via GnuPG) user/pass identity information 
 
-=head1 SYNOPSIS
-
-PAUSE:
-
-    use Config::Identity::PAUSE;
-
-    # 1. Find either $HOME/.pause-identity or $HOME/.pause
-    # 2. Decrypt the found file (if necessary), read, and parse it
-    # 3. Throw an exception unless  %identity has 'user' and 'password' defined
-
-    my %identity = Config::Identity::PAUSE->load_check;
-    print "user: $identity{user} password: $identity{password}\n";
-     
-GitHub API:
-
-    use Config::Identity::GitHub;
-
-    # 1. Find either $HOME/.github-identity or $HOME/.github
-    # 2. Decrypt the found file (if necessary) read, and parse it
-    # 3. Throw an exception unless %identity has 'login' and 'token' defined
-
-    my %identity = Config::Identity::PAUSE->load_check;
-    print "login: $identity{login} token: $identity{token}\n";
-
-=head1 DESCRIPTION
-
-Config::Identity is a tool for loadiing (and optionally decrypting via GnuPG) user/pass identity information
-
-For GitHub API access, an identity is a C<login>/C<token> pair
-
-For PAUSE access, an identity is a C<user>/C<password> pair
-
-=head1 USAGE
-
-=head2 %identity = Config::Identity->load_best( <stub> )
-
-First attempt to load an identity from $HOME/.<stub>-identity
-
-If that file does not exist, then attempt to load an identity from $HOME/.<stub>
-
-The file may be optionally GnuPG encrypted
-
-%identity will be populated like so:
-
-    <key> <value>
-
-For example:
-
-    username alice
-    password hunter2
-
-If an identity file can't be found or read, the method croaks.
-
-=head2 %identity = Config::Identity->load_check( <stub>, <checker> )
-
-Works like C<load_best> but also checks for required keys.  The C<checker>
-argument must be an array reference of B<required> keys or a code reference
-that takes a hashref of key/value pairs from the identity file and returns
-a list of B<missing> keys.  For convenience, the hashref will also be
-placed in C<$_>.
-
-If any keys are found missing, the method croaks.
-
-=head1 Using a custom C<gpg> or passing custom arguments
-
-You can specify a custom C<gpg> executable by setting the CI_GPG environment variable
-
-    export CI_GPG="$HOME/bin/gpg"
-
-You can pass custom arguments by setting the CI_GPG_ARGUMENTS environment variable
-
-    export CI_GPG_ARGUMENTS="--no-secmem-warning"
-
-=head1 Encrypting your identity information with GnuPG
-
-If you've never used GnuPG before, first initialize it:
-
-    # Follow the prompts to create a new key for yourself
-    gpg --gen-key 
-
-To encrypt your GitHub identity with GnuPG using the above key:
-    
-    # Follow the prompts, using the above key as the "recipient"
-    # Use ^D once you've finished typing out your authentication information
-    gpg -ea > $HOME/.github
-
-=head1 Caching your GnuPG secret key via gpg-agent
-
-Put the following in your .*rc
-
-    if which gpg-agent 1>/dev/null
-    then
-        if test -f $HOME/.gpg-agent-info && \
-            kill -0 `cut -d: -f 2 $HOME/.gpg-agent-info` 2>/dev/null
-        then
-            . "${HOME}/.gpg-agent-info"
-            export GPG_AGENT_INFO
-        else
-            eval `gpg-agent --daemon --write-env-file "${HOME}/.gpg-agent-info"`
-        fi
-    else
-    fi
-
-=head1 PAUSE identity format
-
-    user <user>
-    password <password>
-
-C<username> can also be used as alias for C<user>
-
-=head1 GitHub identity format
-
-    login <login>
-    token <token>
-
-=cut
-
-use strict;
-use warnings;
+our $VERSION = "0.0019";
 
 use Carp;
 use IPC::Run qw/ start finish /;
@@ -268,3 +153,121 @@ sub load_check {
 }
 
 1;
+
+=head1 SYNOPSIS
+
+PAUSE:
+
+    use Config::Identity::PAUSE;
+
+    # 1. Find either $HOME/.pause-identity or $HOME/.pause
+    # 2. Decrypt the found file (if necessary), read, and parse it
+    # 3. Throw an exception unless  %identity has 'user' and 'password' defined
+
+    my %identity = Config::Identity::PAUSE->load_check;
+    print "user: $identity{user} password: $identity{password}\n";
+     
+GitHub API:
+
+    use Config::Identity::GitHub;
+
+    # 1. Find either $HOME/.github-identity or $HOME/.github
+    # 2. Decrypt the found file (if necessary) read, and parse it
+    # 3. Throw an exception unless %identity has 'login' and 'token' defined
+
+    my %identity = Config::Identity::PAUSE->load_check;
+    print "login: $identity{login} token: $identity{token}\n";
+
+=head1 DESCRIPTION
+
+Config::Identity is a tool for loading (and optionally decrypting via GnuPG) user/pass identity information
+
+For GitHub API access, an identity is a C<login>/C<token> pair
+
+For PAUSE access, an identity is a C<user>/C<password> pair
+
+=head1 USAGE
+
+=head2 %identity = Config::Identity->load_best( <stub> )
+
+First attempt to load an identity from $HOME/.<stub>-identity
+
+If that file does not exist, then attempt to load an identity from $HOME/.<stub>
+
+The file may be optionally GnuPG encrypted
+
+%identity will be populated like so:
+
+    <key> <value>
+
+For example:
+
+    username alice
+    password hunter2
+
+If an identity file can't be found or read, the method croaks.
+
+=head2 %identity = Config::Identity->load_check( <stub>, <checker> )
+
+Works like C<load_best> but also checks for required keys.  The C<checker>
+argument must be an array reference of B<required> keys or a code reference
+that takes a hashref of key/value pairs from the identity file and returns
+a list of B<missing> keys.  For convenience, the hashref will also be
+placed in C<$_>.
+
+If any keys are found missing, the method croaks.
+
+=head1 Using a custom C<gpg> or passing custom arguments
+
+You can specify a custom C<gpg> executable by setting the CI_GPG environment variable
+
+    export CI_GPG="$HOME/bin/gpg"
+
+You can pass custom arguments by setting the CI_GPG_ARGUMENTS environment variable
+
+    export CI_GPG_ARGUMENTS="--no-secmem-warning"
+
+=head1 Encrypting your identity information with GnuPG
+
+If you've never used GnuPG before, first initialize it:
+
+    # Follow the prompts to create a new key for yourself
+    gpg --gen-key 
+
+To encrypt your GitHub identity with GnuPG using the above key:
+    
+    # Follow the prompts, using the above key as the "recipient"
+    # Use ^D once you've finished typing out your authentication information
+    gpg -ea > $HOME/.github
+
+=head1 Caching your GnuPG secret key via gpg-agent
+
+Put the following in your .*rc
+
+    if which gpg-agent 1>/dev/null
+    then
+        if test -f $HOME/.gpg-agent-info && \
+            kill -0 `cut -d: -f 2 $HOME/.gpg-agent-info` 2>/dev/null
+        then
+            . "${HOME}/.gpg-agent-info"
+            export GPG_AGENT_INFO
+        else
+            eval `gpg-agent --daemon --write-env-file "${HOME}/.gpg-agent-info"`
+        fi
+    else
+    fi
+
+=head1 PAUSE identity format
+
+    user <user>
+    password <password>
+
+C<username> can also be used as alias for C<user>
+
+=head1 GitHub identity format
+
+    login <login>
+    token <token>
+
+=cut
+

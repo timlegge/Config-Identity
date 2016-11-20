@@ -1,7 +1,9 @@
-package Config::Identity::GitHub;
-
 use strict;
 use warnings;
+
+package Config::Identity::GitHub;
+
+our $VERSION = "0.0019";
 
 use Config::Identity;
 use Carp;
