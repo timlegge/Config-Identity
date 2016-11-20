@@ -69,12 +69,24 @@ cmp_deeply( \%cfg, {qw/ apple a1 banana b2 /} );
 }
 
 SKIP: {
-    skip 'GnuPG not available' unless Config::Identity->GPG;
+    skip 'GnuPG not available' unless my $gpg = Config::Identity->GPG;
+
+    my $homedir = File::Spec->catfile(qw/ t assets gpg /);
+
+    # Per https://rt.cpan.org/Public/Bug/Display.html?id=112569 gpg 2.1.x
+    # needs a key format migration run on test data before tests
+    {
+        my $gpg_v = qx/$gpg --version/;
+        my ($first,$second) = $gpg_v =~ /^gpg \s+ \([^)]+\) \s+ (\d+) \. (\d+)/mx;
+        if ( $first && $second && ($first > 2 || ($first == 2 && $second > 0))) {
+            qx/$gpg --homedir $homedir --list-secret-keys/;
+        }
+    }
 
     $ENV{CI_GPG_ARGUMENTS} =
         '--no-secmem-warning ' .
         '--no-permission-warning ' .
-        '--homedir ' . File::Spec->catfile(qw/ t assets gpg /)
+        '--homedir ' . $homedir
     ;
 
     is( Config::Identity->read( File::Spec->catfile(qw/ t assets test.asc /) ), <<_END_ );
