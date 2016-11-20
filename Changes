@@ -1,6 +1,8 @@
 Revision history for Config-Identity
 
 {{$NEXT}}
+
+0.0019    2016-11-19 22:55:59-05:00 America/New_York
     - DAGOLDEN joined as maintainer
     - Attemped test bug fix for rt.cpan.org#112569 (fails with newer gpg)
     - SYNOPSIS fixed

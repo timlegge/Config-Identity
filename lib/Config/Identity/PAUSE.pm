@@ -3,7 +3,7 @@ use warnings;
 
 package Config::Identity::PAUSE;
 
-our $VERSION = "0.0019";
+our $VERSION = '0.0020';
 
 use Config::Identity;
 use Carp;

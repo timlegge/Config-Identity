@@ -4,7 +4,7 @@ use warnings;
 package Config::Identity;
 # ABSTRACT: Load (and optionally decrypt via GnuPG) user/pass identity information 
 
-our $VERSION = "0.0019";
+our $VERSION = '0.0020';
 
 use Carp;
 use IPC::Run qw/ start finish /;
