@@ -1,6 +1,16 @@
-TODO:
-    - Trying GPG on empty file
+Revision history for Config-Identity
 
+{{$NEXT}}
+    - DAGOLDEN joined as maintainer
+    - Attemped test bug fix for rt.cpan.org#112569 (fails with newer gpg)
+    - SYNOPSIS fixed
+    - Added a generic "load_check" method to Config::Identity for simple
+      use cases that don't really need subclassing
+    - Replaces a die() call with croak() for consistency
+
+0.0018 Saturday March 01 13:40:31 PST 2014:
+    - Be more sane with how we interact with gpg
+ 
 0.0017 Saturday March 01 11:12:09 PST 2014:
     - Use IPC::Run instead of IPC::Open3
 
