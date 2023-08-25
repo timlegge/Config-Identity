@@ -109,8 +109,14 @@ _END_
     {
         local $Config::Identity::home = File::Spec->catfile(qw/ t assets github /);
         my %identity = Config::Identity::GitHub->load_check;
-        cmp_deeply( \%identity, {qw/ login alice token hunter2 /} );
+        cmp_deeply( \%identity, {qw/ login alice token hunter2 /}, "github load default identity" );
     }
+    {
+        local $Config::Identity::home = File::Spec->catfile(qw/ t assets github /);
+        my %identity = Config::Identity::GitHub->load_check("org");;
+        cmp_deeply( \%identity, {qw/ login notalice token bughunter /}, "github load specific identity" );
+    }
+
 
     use Config::Identity::PAUSE;
     {

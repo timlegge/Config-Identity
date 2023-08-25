@@ -178,6 +178,13 @@ GitHub API:
     my %identity = Config::Identity::GitHub->load_check;
     print "login: $identity{login} token: $identity{token}\n";
 
+    or
+
+    # you can also pass a "stub" to the load_check to look for
+    # the identity information in ~/.project-identity or ~/.project
+    my %identity = Config::Identity::GitHub->load_check("project");
+    print "login: $identity{login} token: $identity{token}\n";
+
 =head1 DESCRIPTION
 
 Config::Identity is a tool for loading (and optionally decrypting via GnuPG) user/pass identity information
